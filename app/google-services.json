@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "298061912936",
+    "project_id": "i170303-i170364-project-2c2dd",
+    "storage_bucket": "i170303-i170364-project-2c2dd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298061912936:android:03a520d871ed7b4f4054dd",
+        "android_client_info": {
+          "package_name": "com.scrapper.i170303_i170364_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298061912936-3s388kig7qiqbj58rbiq3uiajm8oud2h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlwtrKTvO7fiG8H-PL5x1SMFNAssT-s0w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298061912936-3s388kig7qiqbj58rbiq3uiajm8oud2h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
