@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,9 +41,9 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-        email = findViewById(R.id.email_input);
-        password = findViewById(R.id.password_input);
-        username = findViewById(R.id.username_input);
+        email = findViewById(R.id.emailField);
+        password = findViewById(R.id.passwordField);
+        username = findViewById(R.id.userField);
 
         signUpButton = findViewById(R.id.sign_up_btn);
 
@@ -50,11 +51,38 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isEmpty(email) && !isEmpty(password) && !isEmpty(username)) {
-                    Toast.makeText(SignUpActivity.this, "All field are filled", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(SignUpActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+
+                TextView usernameField = findViewById(R.id.userField);
+                TextView emailField = findViewById(R.id.emailField);
+                TextView passField = findViewById(R.id.passwordField);
+
+                String email = emailField.getText().toString().trim();
+                String password = passField.getText().toString().trim();
+                String username = usernameField.getText().toString().trim();
+
+                if (areFieldsFilled(usernameField, emailField, passField)) { // if all the fields are filled
+
+
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Toast.makeText(SignUpActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                                        startActivity(intent); // Go to main page
+
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Toast.makeText(SignUpActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                    // ...
+                                }
+                            });
+
                 }
             }
         });
@@ -74,14 +102,30 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    // checks if any TextInputEditText is empty
-    private static boolean isEmpty(TextInputEditText field) {
-        String fieldStr = field.getText().toString();
-        if(fieldStr.isEmpty()) {
-            return true;
+    boolean isEmailValid(String email) {   // checks if email is of invalid format
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
+    boolean areFieldsFilled(TextView userField, TextView emailField, TextView passField) { // checks if all the fields are filled and valid
+        Boolean filledFields = true; // if all fields are filled
+
+        if (TextUtils.isEmpty(userField.getText().toString())) { // if username field is empty
+            userField.setError("username field can't be empty");
+            filledFields = false;
         }
-        else {
-            return false;
+
+        if (TextUtils.isEmpty(emailField.getText().toString())) { // if email field is empty
+            emailField.setError("Email Field can't be empty"); //
+            filledFields = false;
+        } else if (!isEmailValid(emailField.getText().toString())) { // if email is invalid
+            emailField.setError("Invalid Email format");
+            filledFields = false;
         }
+
+        if (TextUtils.isEmpty(passField.getText().toString())) { // if email field is empty
+            passField.setError("Pass Field can't be empty"); //
+            filledFields = false;
+        }
+        return filledFields;
     }
 }

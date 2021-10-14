@@ -1,16 +1,20 @@
 package com.scrapper.i170303_i170364_project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
@@ -38,24 +42,56 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         loginButton = findViewById(R.id.login_btn);
 
-        email = findViewById(R.id.email_input);
-        password = findViewById(R.id.password_input);
+        email = findViewById(R.id.emailField);
+        password = findViewById(R.id.passField);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (!isEmpty(email) && !isEmpty(password)) {
-                    Toast.makeText(LoginActivity.this, "All field are filled", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(LoginActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            public void onClick(View view) { // Runs when the login button is clicked
+
+                TextView emailField = findViewById(R.id.emailField);
+                TextView passField = findViewById(R.id.passField);
+
+                String email = emailField.getText().toString().trim();
+                String password = passField.getText().toString().trim();
+
+                if (areFieldsFilled(emailField, passField)) { // if all the fields are filled
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Toast.makeText(LoginActivity.this, "Login Success!.",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent); // Go to main page
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                }
+                            });
                 }
             }
         });
 
 
+        TextView forgotPass = findViewById(R.id.forgot_pass); // forgot password link
+        // Redirects to reset page if user forgot password
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, ResetActivity.class);
+                startActivity(intent);
+            }
+        });
 
-        goToSignUp = findViewById(R.id.go_to_sign_up);
+        TextView goToSignUp = findViewById(R.id.go_to_sign_up); // sign up page link
+        // Redirects to sign up page if user is not registered
         goToSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,17 +100,30 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
-    private static boolean isEmpty(TextInputEditText field) {
-        String fieldStr = field.getText().toString();
-        if(fieldStr.isEmpty()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+    boolean isEmailValid(String email) {   // checks if email is of invalid format
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
+    boolean areFieldsFilled(TextView emailField, TextView passField) { // checks if all the fields are filled and valid
+        Boolean filledFields = true; // if all fields are filled
 
+        if (TextUtils.isEmpty(emailField.getText().toString())) { // if email field is empty
+            emailField.setError("Email Field can't be empty"); //
+            filledFields = false;
+        } else if (!isEmailValid(emailField.getText().toString())) { // if email is invalid
+            emailField.setError("Invalid Email format");
+            filledFields = false;
+        }
+
+        if (TextUtils.isEmpty(passField.getText().toString())) { // if pass field is empty
+            passField.setError("Pass Field can't be empty"); //
+            filledFields = false;
+        }
+
+
+        return filledFields;
+    }
 }

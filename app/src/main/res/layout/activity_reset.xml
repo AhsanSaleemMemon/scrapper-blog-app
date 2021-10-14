@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_height="match_parent"
+    android:layout_width="match_parent"
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/logo_image"
+            android:layout_centerHorizontal="true"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/logo"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:textSize="30sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/montserrat"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/logo_image"
+            android:id="@+id/welcome_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset Password"
+            />
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:id="@+id/emailField"
+            android:layout_below="@id/welcome_text"
+            android:hint="Email"
+            android:textColorHint="@color/black"
+            android:background="@drawable/edittext_bg"
+            android:padding="15dp"
+            android:inputType="textPersonName"
+            android:layout_height="60dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:id="@+id/reset_btn"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:text="Reset"
+            android:layout_below="@id/emailField"
+            android:layout_marginTop="30dp"
+            app:cornerRadius="10dp"
+            android:layout_height="75dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="match_parent"
+            android:id="@+id/loginPage"
+            android:textSize="20sp"
+            android:textAllCaps="false"
+            android:text="Go back to Login"
+            android:layout_below="@id/reset_btn"
+            android:layout_marginTop="30dp"
+            app:cornerRadius="10dp"
+            android:layout_height="75dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

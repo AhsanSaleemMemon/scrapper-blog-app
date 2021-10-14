@@ -35,7 +35,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:id="@+id/email_input"
+            android:id="@+id/emailField"
             android:layout_below="@+id/welcome_text"
             android:padding="15dp"
             android:textColorHint="@color/black"
@@ -49,8 +49,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:id="@+id/password_input"
-            android:layout_below="@+id/email_input"
+            android:id="@+id/passField"
+            android:layout_below="@+id/emailField"
             android:hint="Password"
             android:textColorHint="@color/black"
             android:background="@drawable/edittext_bg"
@@ -65,7 +65,7 @@
             android:textSize="20sp"
             android:textAllCaps="false"
             android:text="Login"
-            android:layout_below="@id/password_input"
+            android:layout_below="@id/passField"
             android:layout_marginTop="30dp"
             app:cornerRadius="10dp"
             android:layout_height="75dp"/>
