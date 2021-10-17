@@ -28,21 +28,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textView);
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        mAuth = FirebaseAuth.getInstance();
-        signOutButton = findViewById(R.id.sign_out);
-        username = findViewById(R.id.username_btn);
-
-        username.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Toast.makeText(MainActivity.this, "Display clicked: " +user.getDisplayName(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
+//        textView = findViewById(R.id.textView);
+//
+//        user = FirebaseAuth.getInstance().getCurrentUser();
+//        mAuth = FirebaseAuth.getInstance();
+//        signOutButton = findViewById(R.id.sign_out);
+//        username = findViewById(R.id.username_btn);
+//
+//        username.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Toast.makeText(MainActivity.this, "Display clicked: " +user.getDisplayName(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
 
 

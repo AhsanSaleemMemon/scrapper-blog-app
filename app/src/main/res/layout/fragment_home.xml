@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:id="@+id/todayread"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:text="Today's Read" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todayread_recyclerview"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/todayread"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/todayread_recyclerview"
+        android:text="For You"
+        android:layout_marginTop="50dp"
+        android:textSize="30dp"
+        android:id="@+id/foryou"
+        android:textStyle="bold"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/foryou_recyclerview"
+        android:layout_below="@id/foryou"
+        android:layout_marginTop="28dp"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/lr"
+        android:weightSum="3"
+    >
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+        android:src="@drawable/search"
+        android:layout_weight="1"
+
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:hint="Search for articles"
+        android:layout_weight="1"
+
+        />
+
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="25dp"
+
+        android:src="@drawable/cross"
+        android:layout_weight="1"
+
+        />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Search Reslts for sample"
+        android:textStyle="italic"
+        android:layout_marginTop="10dp"
+        android:id="@+id/searchresult"
+        android:layout_below="@id/lr"
+        />
+
+<androidx.recyclerview.widget.RecyclerView
+    android:layout_width="match_parent"
+    android:layout_below="@id/searchresult"
+    android:layout_marginTop="10dp"
+    android:layout_height="wrap_content"
+    android:id="@+id/search_recyclerview"
+    />
+
+
+</RelativeLayout>

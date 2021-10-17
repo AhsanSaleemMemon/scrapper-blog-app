@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/relativelayout_id"
+    >
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logout"
+        android:layout_alignParentRight="true"
+        android:text="Log out"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:layout_below="@id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:id="@+id/profile"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/relativelayout2_id"
+        android:layout_below="@+id/relativelayout_id"
+        >
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="100dp"
+        android:layout_marginBottom="50dp"
+        android:layout_height="100dp"
+        android:src="@drawable/man"
+        android:id="@+id/profilepic"
+        app:civ_border_width="2dp"
+        android:scaleType="centerCrop"
+        app:civ_border_color="@color/white"/>
+
+    <TextView
+        android:id="@+id/profilename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ahsan Saleem Memon"
+        android:layout_toRightOf="@+id/profilepic"
+        android:layout_toEndOf="@id/profilepic"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+
+        />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ahsanmemon288@gmail.com"
+            android:layout_below="@id/profilename"
+            android:layout_toRightOf="@id/profilepic"
+            android:layout_marginLeft="20dp"
+            android:id="@+id/profileemail"
+            android:layout_marginTop="10dp"
+            android:layout_centerVertical="true"
+
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="2"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:layout_below="@+id/relativelayout2_id"
+        android:id="@+id/linearlayout_id"
+        >
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginRight="10dp"
+            android:text="Bookmarks"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:text="Downloads"
+
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearlayout_id"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/bookmarksordownloads_recyclerview"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>

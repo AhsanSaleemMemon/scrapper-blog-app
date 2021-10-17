@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/blogimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/wp"
+        android:adjustViewBounds="true"
+        app:shapeAppearanceOverlay="@style/roundedimageview"
+        android:scaleType="fitCenter"
+        android:maxWidth="280dp"
+        android:maxHeight="180dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxWidth="240dp"
+        android:id="@+id/blogtitle"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/blogimage"
+        android:textSize="20dp"
+        android:text="Sampletassdvsdfdsfdsffsdfe of blog"
+        />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/saved"
+            android:layout_below="@id/blogimage"
+            android:layout_marginTop="10dp"
+            android:layout_alignRight="@id/blogimage" />
+
+
+
+</RelativeLayout>
