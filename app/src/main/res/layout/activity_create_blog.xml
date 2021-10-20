@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:id="@+id/createblog"
+        android:textSize="30sp"
+        android:layout_margin="16dp"
+        android:textStyle="bold"
+
+        android:fontFamily="@font/montserrat"
+        android:text="Be Creative" />
+
+
+
+        <EditText
+            android:fontFamily="@font/montserrat"
+            android:layout_below="@id/createblog"
+            android:background="@drawable/rounded_edittext"
+            android:id="@+id/title_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter blog's title"
+            android:layout_margin="16dp"
+            android:elevation="5dp"
+            android:padding="10dp"
+            />
+
+
+
+
+        <EditText
+            android:fontFamily="@font/montserrat"
+            android:layout_below="@id/title_id"
+            android:id="@+id/content_id"
+            android:layout_margin="16dp"
+            android:elevation="5dp"
+            android:padding="10dp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:background="@drawable/rounded_edittext"
+            android:maxLines="1000"
+            android:lines="20"
+            android:singleLine="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:hint="Start writing your blog here ..."
+            android:gravity="start"
+
+            />
+
+
+    <com.google.android.material.button.MaterialButton
+
+
+        android:layout_alignParentBottom="true"
+        android:id="@+id/post_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="10dp"
+        android:text="Post"
+        app:cornerRadius="10dp"
+        android:fontFamily="@font/montserrat"
+        android:layout_alignRight="@id/content_id" />
+
+
+</RelativeLayout>
+

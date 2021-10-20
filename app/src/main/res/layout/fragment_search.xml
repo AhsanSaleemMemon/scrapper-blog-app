@@ -10,6 +10,7 @@
         android:orientation="horizontal"
         android:id="@+id/lr"
         android:weightSum="3"
+        android:layout_margin="16dp"
     >
     <ImageView
         android:layout_width="40dp"
@@ -24,6 +25,8 @@
         android:layout_height="25dp"
         android:hint="Search for articles"
         android:layout_weight="1"
+        android:fontFamily="@font/montserrat"
+
 
         />
 
@@ -39,6 +42,7 @@
     </LinearLayout>
 
     <TextView
+        android:fontFamily="@font/montserrat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Search Reslts for sample"
@@ -46,14 +50,17 @@
         android:layout_marginTop="10dp"
         android:id="@+id/searchresult"
         android:layout_below="@id/lr"
+        android:layout_margin="16dp"
         />
 
 <androidx.recyclerview.widget.RecyclerView
+    android:layout_margin="16dp"
     android:layout_width="match_parent"
     android:layout_below="@id/searchresult"
     android:layout_marginTop="10dp"
     android:layout_height="wrap_content"
     android:id="@+id/search_recyclerview"
+    android:fontFamily="@font/montserrat"
     />
 
 

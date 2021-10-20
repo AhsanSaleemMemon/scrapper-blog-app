@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -28,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat"
         android:id="@+id/blogtitle"
         android:layout_height="wrap_content"
         android:maxWidth="300dp"
@@ -48,6 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/blogtitle"
+        android:fontFamily="@font/montserrat"
         android:id="@+id/blogtime"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/blogimage"
@@ -61,6 +64,7 @@
         android:layout_height="wrap_content"
         android:text="-"
         android:id="@+id/dash"
+        android:fontFamily="@font/montserrat"
         android:layout_below="@id/blogtitle"
         android:textSize="18sp"
         android:layout_toRightOf="@id/blogtime"
@@ -75,6 +79,7 @@
         android:layout_toRightOf="@id/dash"
         android:layout_toEndOf="@id/dash"
         android:text="5 min Read"
+        android:fontFamily="@font/montserrat"
         android:layout_marginTop="5dp"
         android:textSize="10sp"
         />

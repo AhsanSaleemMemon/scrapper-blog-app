@@ -24,7 +24,7 @@
         android:layout_toRightOf="@id/blogimage"
 
         android:layout_width="wrap_content"
-
+        android:fontFamily="@font/montserrat"
         android:layout_marginTop="10dp"
         android:id="@+id/blogtitle"
         android:layout_height="wrap_content"
@@ -50,6 +50,7 @@
         android:layout_toRightOf="@id/blogimage"
         android:text="15 Sept,2020"
         android:textSize="10sp"
+        android:fontFamily="@font/montserrat"
         />
 
     <TextView
@@ -61,6 +62,7 @@
         android:textSize="18sp"
         android:layout_toRightOf="@id/blogtime"
         android:layout_marginLeft="10dp"
+        android:fontFamily="@font/montserrat"
         android:layout_toEndOf="@id/blogtime" />
 
     <TextView
@@ -73,6 +75,7 @@
         android:text="5 min Read"
         android:layout_marginTop="5dp"
         android:textSize="10sp"
+        android:fontFamily="@font/montserrat"
         />
 
 </RelativeLayout>

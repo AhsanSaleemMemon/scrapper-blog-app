@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -24,7 +25,7 @@
     </androidx.cardview.widget.CardView>
     <TextView
         android:layout_toRightOf="@id/blogimage"
-
+        android:fontFamily="@font/montserrat"
         android:layout_width="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
@@ -48,6 +49,7 @@
         android:text="15 Sept,2020"
         android:textSize="10sp"
         android:layout_marginLeft="5dp"
+        android:fontFamily="@font/montserrat"
         />
 
     <TextView
@@ -59,6 +61,7 @@
         android:textSize="18sp"
         android:layout_toRightOf="@id/blogtime"
         android:layout_marginLeft="10dp"
+        android:fontFamily="@font/montserrat"
         android:layout_toEndOf="@id/blogtime" />
 
     <TextView
@@ -71,6 +74,7 @@
         android:text="5 min Read"
         android:layout_marginTop="5dp"
         android:textSize="10sp"
+        android:fontFamily="@font/montserrat"
         />
 
 </RelativeLayout>
