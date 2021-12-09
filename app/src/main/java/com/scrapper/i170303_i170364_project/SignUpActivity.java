@@ -4,15 +4,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
@@ -21,46 +27,48 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SignUpActivity extends AppCompatActivity {
 
+    Uri imageUri;
     TextView goToLogin;
     FirebaseAuth mAuth;
-
-
-    TextInputEditText email;
-    TextInputEditText password;
-    TextInputEditText username;
-
+    TextInputEditText emailField;
+    TextInputEditText passwordField;
+    TextInputEditText nameField;
+    CircleImageView selectImagebtn;
     MaterialButton signUpButton;
+    ActivityResultLauncher<String> mGetContent;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-
-
+        selectImagebtn =findViewById(R.id.profile_pic);
         mAuth = FirebaseAuth.getInstance();
-        email = findViewById(R.id.emailField);
-        password = findViewById(R.id.passwordField);
-        username = findViewById(R.id.userField);
+        emailField = findViewById(R.id.emailField);
+        passwordField = findViewById(R.id.passwordField);
+        nameField = findViewById(R.id.userField);
 
         signUpButton = findViewById(R.id.sign_up_btn);
-
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                TextView usernameField = findViewById(R.id.userField);
-                TextView emailField = findViewById(R.id.emailField);
-                TextView passField = findViewById(R.id.passwordField);
 
                 String email = emailField.getText().toString().trim();
-                String password = passField.getText().toString().trim();
-                String username = usernameField.getText().toString().trim();
+                String password = passwordField.getText().toString().trim();
+                String name = nameField.getText().toString().trim();
 
-                if (areFieldsFilled(usernameField, emailField, passField)) { // if all the fields are filled
+                if (areFieldsFilled(nameField, emailField, passwordField)) { // if all the fields are filled
 
 
                     mAuth.createUserWithEmailAndPassword(email, password)
@@ -68,10 +76,27 @@ public class SignUpActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        // Sign in success, update UI with the signed-in user's information
-                                        Toast.makeText(SignUpActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                                        startActivity(intent); // Go to main page
+                                        User user = new User(
+                                                email,
+                                                name
+                                        );
+                                        FirebaseDatabase.getInstance().getReference("Users")
+                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(SignUpActivity.this, "Sign up Success", Toast.LENGTH_LONG).show();
+                                                    Intent intent =new Intent(SignUpActivity.this,UploadImageActivity.class);
+                                                    startActivity(intent);
+
+                                                } else {
+                                                    //display a failure message
+                                                    Toast.makeText(SignUpActivity.this, "Sign up failure 1", Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
 
                                     } else {
                                         // If sign in fails, display a message to the user.
@@ -128,4 +153,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
         return filledFields;
     }
+
+
 }

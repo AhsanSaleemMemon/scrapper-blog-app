@@ -8,16 +8,16 @@
         />
 
     <item
-        android:id="@+id/help_nav"
+        android:id="@+id/search_nav"
         android:icon="@drawable/search"
         android:title="Search"
         android:enabled="true"
         />
 
     <item
-        android:id="@+id/forum_nav"
+        android:id="@+id/profile_nav"
         android:icon="@drawable/user"
-        android:title="User"
+        android:title="Profile"
         android:enabled="true"
         />
 

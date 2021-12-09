@@ -17,16 +17,16 @@
         android:maxWidth="280dp"
         android:maxHeight="180dp"
         />
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_marginTop="10dp"
-        android:maxWidth="240dp"
         android:id="@+id/blogtitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/blogimage"
-        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:maxWidth="240sp"
         android:text="Sampletassdvsdfdsfdsffsdfe of blog"
-        />
+        android:textSize="20dp" />
 
         <ImageView
             android:layout_width="30dp"

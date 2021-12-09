@@ -1,55 +1,65 @@
 package com.scrapper.i170303_i170364_project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements  BottomNavigationView.OnNavigationItemSelectedListener {
 
 
-    FirebaseAuth mAuth;
-    FirebaseUser user;
-
-    MaterialButton username;
-    MaterialButton signOutButton;
-
-    TextView textView;
+    BottomNavigationView bottomNavigator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bottomNavigator = findViewById(R.id.bottomNav);
+        bottomNavigator.setOnItemSelectedListener(MainActivity.this);
+        loadFragment(new HomeFragment());
 
-//        textView = findViewById(R.id.textView);
-//
-//        user = FirebaseAuth.getInstance().getCurrentUser();
-//        mAuth = FirebaseAuth.getInstance();
-//        signOutButton = findViewById(R.id.sign_out);
-//        username = findViewById(R.id.username_btn);
-//
-//        username.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Toast.makeText(MainActivity.this, "Display clicked: " +user.getDisplayName(), Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
+    }
 
 
-
+    private boolean loadFragment(Fragment fragment){
+        if(fragment!=null){
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer,fragment) // Replace the frame layout (in main activity) with fragment
+                    .commit();
+            return true;
+        }
+        return false;
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment fragment = null;
+
+        switch (item.getItemId()){
+            case R.id.home_nav:
+                fragment = new HomeFragment();
+                break;
+            case R.id.search_nav:
+                fragment = new SearchFragment();
+                break;
+            case R.id.profile_nav:
+                fragment = new ProfileFragment();
+                break;
+
+        }
+        return loadFragment(fragment);
     }
+
 }
