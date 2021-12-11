@@ -12,7 +12,8 @@
         <activity android:name=".UploadImageActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".CreateBlogActivity"></activity>
-        <activity android:name=".WelcomeScreenActivity">
+        <activity android:name=".WelcomeScreenActivity"
+            android:launchMode="singleInstance">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

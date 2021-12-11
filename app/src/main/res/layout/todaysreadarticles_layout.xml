@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_margin="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -10,13 +10,12 @@
         android:id="@+id/blogimage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/wp"
         android:adjustViewBounds="true"
-        app:shapeAppearanceOverlay="@style/roundedimageview"
-        android:scaleType="fitCenter"
         android:maxWidth="280dp"
         android:maxHeight="180dp"
-        />
+        android:scaleType="fitCenter"
+        android:src="@drawable/wp"
+        app:shapeAppearanceOverlay="@style/roundedimageview" />
 
     <TextView
         android:id="@+id/blogtitle"
@@ -24,17 +23,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/blogimage"
         android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat"
         android:maxWidth="240sp"
-        android:text="Sampletassdvsdfdsfdsffsdfe of blog"
+        android:textStyle="bold"
+        android:text="sample title of a blog"
+        android:textColor="@color/primary_color"
         android:textSize="20dp" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/saved"
-            android:layout_below="@id/blogimage"
-            android:layout_marginTop="10dp"
-            android:layout_alignRight="@id/blogimage" />
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/blogimage"
+        android:layout_alignRight="@id/blogimage"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/saved" />
 
 
 
