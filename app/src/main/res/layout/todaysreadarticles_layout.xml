@@ -7,34 +7,33 @@
 
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/blogimage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/postimage"
+        android:layout_width="300dp"
+        android:layout_height="180dp"
         android:adjustViewBounds="true"
-        android:maxWidth="280dp"
-        android:maxHeight="180dp"
+
         android:scaleType="fitCenter"
-        android:src="@drawable/wp"
+        android:background="@drawable/wp"
         app:shapeAppearanceOverlay="@style/roundedimageview" />
 
     <TextView
-        android:id="@+id/blogtitle"
+        android:id="@+id/posttitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/blogimage"
+        android:layout_below="@+id/postimage"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat"
         android:maxWidth="240sp"
-        android:textStyle="bold"
         android:text="sample title of a blog"
         android:textColor="@color/primary_color"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textStyle="bold" />
 
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_below="@id/blogimage"
-        android:layout_alignRight="@id/blogimage"
+        android:layout_below="@id/postimage"
+        android:layout_alignRight="@id/postimage"
         android:layout_marginTop="10dp"
         android:src="@drawable/saved" />
 

@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +22,28 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 
 public class HomeFragment extends Fragment {
 
-    private  TextView tempContent;
+
+    private  RecyclerView forYouRecyclerView;
+    private RecyclerView todayReadRecyclerView;
+    private PostAdapter postAdapter;
+    private TodayReadPostAdapter todayReadPostAdapter;
+    private List<Post> forYouList;
+    private List<Post> todayReadList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FloatingActionButton createFAB;
 
 
+        forYouList = new ArrayList<>();
+        todayReadList = new ArrayList<>();
 
         View HomeView = inflater.inflate(R.layout.fragment_home,null);
         createFAB=HomeView.findViewById(R.id.fab);
@@ -40,19 +55,46 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        forYouRecyclerView = HomeView.findViewById(R.id.foryou_recyclerview);
+        forYouRecyclerView.setLayoutManager(new LinearLayoutManager(HomeView.getContext()));
 
-        tempContent = HomeView.findViewById(R.id.temp_content);
+        todayReadRecyclerView = HomeView.findViewById(R.id.todayread_recyclerview);
+        todayReadRecyclerView.setLayoutManager(new LinearLayoutManager(HomeView.getContext(), LinearLayoutManager.HORIZONTAL, true));
+
+
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Posts").child("TfxTK9rZYlabwqLEBW1J2xpgU063");
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference("Posts");
         db.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot childSnapShot : snapshot.getChildren()) {
-                    Post post = childSnapShot.getValue(Post.class);
-                    tempContent.setText(post.getContent());
+                for (DataSnapshot userSnapShot : snapshot.getChildren()) {
+                    for (DataSnapshot postSnapShot: userSnapShot.getChildren()) {
+                        Post post = postSnapShot.getValue(Post.class);
+
+                        forYouList.add(post);
+                    }
+
                 }
+
+                todayReadList = forYouList;
+                Collections.sort(todayReadList, new Comparator<Post>() {
+                    public int compare(Post p1, Post p2) {
+                        return p2.getTimeStamp().compareTo(p1.getTimeStamp());
+                    }
+                });
+
+                List<Post> updatedTodayReadList = new ArrayList<>();
+                for(int i=0;i<todayReadList.size();i++) {
+                    updatedTodayReadList.add(todayReadList.get(i));
+                }
+
+                todayReadPostAdapter = new TodayReadPostAdapter(updatedTodayReadList, getActivity());
+                todayReadRecyclerView.setAdapter(todayReadPostAdapter);
+
+                postAdapter=new PostAdapter(forYouList, getActivity());
+                forYouRecyclerView.setAdapter(postAdapter);
             }
 
             @Override
@@ -60,6 +102,9 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
+        forYouRecyclerView.setAdapter(postAdapter);
         return HomeView;
 
     }
