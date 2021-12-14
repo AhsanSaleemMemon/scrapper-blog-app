@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +50,9 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
 
         holder.t1.setText(data.get(position).getHeader());
         holder.t2.setText(data.get(position).getDesc());
+        Picasso.get().load(data.get(position).getImgname()).into(holder.img);
 
-        holder.img.setImageResource(data.get(position).getImgname());
+      //  holder.img.setImageResource(data.get(position).getImgname());
 
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override

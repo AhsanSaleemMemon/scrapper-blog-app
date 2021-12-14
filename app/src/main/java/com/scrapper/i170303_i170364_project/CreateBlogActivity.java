@@ -74,8 +74,6 @@ public class CreateBlogActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    //user=ds.getValue(User.class);
-                    //Log.d("MyApp",user.name);
                     String usersInDatabase = ds.child(userID).getKey().toString();
                     Toast.makeText(CreateBlogActivity.this,usersInDatabase,LENGTH_SHORT).show();
                     if(usersInDatabase.equals(userID)){

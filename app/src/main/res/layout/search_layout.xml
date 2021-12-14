@@ -11,14 +11,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/blogimage"
         android:layout_marginBottom="10dp"
-
         app:cardCornerRadius="10dp">
 
         <com.google.android.material.imageview.ShapeableImageView
 
             android:layout_width="60dp"
+            android:id="@+id/blogimageview"
             android:layout_height="60dp"
-            android:background="@drawable/wp"
+            android:src="@drawable/wp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             />
@@ -29,10 +29,9 @@
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-
-
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/blogimage"
         android:layout_toRightOf="@id/blogimage"
         android:fontFamily="@font/montserrat"
         android:maxWidth="300dp"
@@ -41,19 +40,19 @@
 
     <ImageView
         android:layout_width="30dp"
-        android:id="@+id/blogbookmark"
         android:layout_height="30dp"
+        android:src="@drawable/saved"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
-        android:src="@drawable/saved" />
+        />
 
 
     <TextView
-        android:id="@+id/bloguploadtime"
+        android:id="@+id/blogtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/blogtitle"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@id/blogimage"
         android:fontFamily="@font/montserrat"
@@ -68,12 +67,11 @@
         android:fontFamily="@font/montserrat"
         android:layout_below="@id/blogtitle"
         android:textSize="18sp"
-        android:layout_toRightOf="@id/bloguploadtime"
+        android:layout_toRightOf="@id/blogtime"
         android:layout_marginLeft="10dp"
-        />
+        android:layout_toEndOf="@id/blogtime" />
 
     <TextView
-        android:id="@+id/blogreadtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/blogtitle"
