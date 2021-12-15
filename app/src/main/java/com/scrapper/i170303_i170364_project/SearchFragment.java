@@ -41,35 +41,36 @@ public class SearchFragment extends Fragment {
     private DatabaseReference mReference;
     RecyclerView rcv;
     myadapter adapter;
-    ArrayList<SearchModel> list =new ArrayList<SearchModel>();
+    ArrayList<Post> list =new ArrayList<Post>();
+    ArrayList<String> postIDList =new ArrayList<String>();
+    String postID="";
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View SearchView = inflater.inflate(R.layout.recyclerview, null);
         //ActionBar bar = SearchView.getActionBar();
         //bar.setBackgroundDrawable(new ColorDrawable("COLOR"));
-
         rcv = SearchView.findViewById(R.id.recview);
-        //  rcv.setLayoutManager(new LinearLayoutManager(this));
-
-
-
-
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference("Posts");
+
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot userSnapshot: snapshot.getChildren()){
+
                     for (DataSnapshot postSnapshot: userSnapshot.getChildren()){
                         Post post=postSnapshot.getValue(Post.class);
-                        SearchModel sModel = new SearchModel(post.getTitle(),post.getTimeStamp(),post.getImageLink());
-                        list.add(sModel);
+                        //Post sModel = new SearchModel(post.getTitle(),post.getTimeStamp(),post.getImageLink());
+                        list.add(post);
+                        postID= postSnapshot.getRef().getKey();
+                        postIDList.add(postID);
 
                     }
                 }
-                adapter = new myadapter(list,getContext());
+                adapter = new myadapter(list,getContext(),postIDList);
                 rcv.setAdapter(adapter);
+                //Toast.makeText(getContext(),postID,Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -78,20 +79,12 @@ public class SearchFragment extends Fragment {
             }
         });
 
-
-
-
         //LinearLayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
         //rcv.setLayoutManager(layoutManager);
 
         GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2);
         rcv.setLayoutManager(gridLayoutManager);
         setHasOptionsMenu(true);
-
-
-
-
-
         return SearchView;
     }
 

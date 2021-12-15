@@ -1,77 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView android:layout_height="match_parent"
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    xmlns:android="http://schemas.android.com/apk/res/android" />
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:cornerRadius="http://schemas.android.com/apk/res-auto"
+    tools:context=".BlogPage">
+    >
+
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/pic"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/man"
-        android:layout_margin="16dp"
-        android:id="@+id/pic"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/man" />
+
+    <TextView
+        android:id="@+id/authorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
         android:layout_toRightOf="@+id/pic"
+        android:fontFamily="@font/montserrat"
         android:text="Ahsan Saleem"
-        android:textStyle="bold"
-        android:fontFamily="@font/montserrat"
-        android:id="@+id/name"
-        />
+        android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/uploadTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_below="@+id/authorName"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/pic"
-        android:layout_below="@+id/name"
+        android:fontFamily="@font/montserrat"
         android:text="10th October,2021"
-        android:textStyle="italic"
-        android:textSize="10dp"
-        android:fontFamily="@font/montserrat"
-        />
+        android:textSize="11dp"
+        android:textStyle="italic" />
 
-    <com.google.android.material.button.MaterialButton
+    <ImageView
+        android:id="@+id/downloadButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Follow"
-        android:layout_margin="16dp"
         android:layout_alignParentRight="true"
-        />
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_baseline_cloud_download_24"
+         />
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:fontFamily="@font/montserrat"
-        android:layout_margin="16dp"
-        android:layout_below="@id/pic"
-        android:text="Blog title here"
         android:id="@+id/title"
-        />
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:layout_below="@id/pic"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/montserrat"
-        android:layout_margin="16dp"
-        android:layout_below="@id/title"
-        android:text="Blog content here..."
-        android:id="@+id/content"
-        />
+        android:text="Blog title here"
+        android:textStyle="bold" />
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="148dp"
+    android:layout_margin="16dp"
+    android:layout_below="@id/title"
+    cornerRadius:cardCornerRadius="16dp"
+    android:id="@+id/blogphotocard"
+
+    >
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/blogphoto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+ />
+
+
+</androidx.cardview.widget.CardView>
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/blogphotocard"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:overScrollMode="always"
+
+        android:scrollbarStyle="insideInset"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
+
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat"
+            android:maxHeight="100dp"
+            android:maxWidth="390dp"
+            android:minLines="5"
+            android:text="Blog content here..." />
+
+    </ScrollView>
 
 </RelativeLayout>
 
-</ScrollView>

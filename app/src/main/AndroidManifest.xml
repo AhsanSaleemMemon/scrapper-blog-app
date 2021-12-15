@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.scrapper.i170303_i170364_project">
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,6 +14,7 @@
         <activity android:name=".UploadImageActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".CreateBlogActivity"></activity>
+        <activity android:name=".BlogPage"></activity>
         <activity android:name=".WelcomeScreenActivity"
             android:launchMode="singleInstance">
 

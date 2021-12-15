@@ -1,6 +1,9 @@
 package com.scrapper.i170303_i170364_project;
 
 
+import static java.security.AccessController.getContext;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.icu.text.Normalizer2;
@@ -22,14 +25,16 @@ import java.util.List;
 
 public class myadapter extends RecyclerView.Adapter<myviewholder> implements Filterable
 {
-    ArrayList<SearchModel> data;
-    ArrayList<SearchModel> backup;
+    ArrayList<Post> data;
+    ArrayList<Post> backup;
+    ArrayList<String> postIDList;
     Context context;
 
-    public myadapter(ArrayList<SearchModel> data, Context context)
+    public myadapter(ArrayList<Post> data, Context context,ArrayList<String> postIDList)
 
     {
         this.data = data;
+        this.postIDList = postIDList;
         this.context=context;
         backup=new ArrayList<>(data);
     }
@@ -44,24 +49,27 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final myviewholder holder, int position)
+    public void onBindViewHolder(@NonNull final myviewholder holder, @SuppressLint("RecyclerView") int position)
     {
-        final SearchModel temp=data.get(position);
+        final Post temp=data.get(position);
 
-        holder.t1.setText(data.get(position).getHeader());
-        holder.t2.setText(data.get(position).getDesc());
-        Picasso.get().load(data.get(position).getImgname()).into(holder.img);
+        holder.t1.setText(data.get(position).getTitle());
+        holder.t2.setText(data.get(position).getTimeStamp());
+        Picasso.get().load(data.get(position).getImageLink()).into(holder.img);
 
       //  holder.img.setImageResource(data.get(position).getImgname());
 
-        holder.img.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(context,Main2Activity.class);
-                intent.putExtra("imagename",temp.getImgname());
-                intent.putExtra("header",temp.getHeader());
-                intent.putExtra("desc",temp.getDesc());
+                Intent intent=new Intent(context,BlogPage.class);
+                intent.putExtra("postID",postIDList.get(position));
+              intent.putExtra("postimage",temp.getImageLink());
+                intent.putExtra("title",temp.getTitle());
+                intent.putExtra("uploadtime",temp.getTimeStamp());
+                intent.putExtra("authorname", temp.getAuthor());
+                intent.putExtra("content", temp.getContent());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
@@ -86,15 +94,15 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
         // background thread
         protected FilterResults performFiltering(CharSequence keyword)
         {
-            ArrayList<SearchModel> filtereddata=new ArrayList<>();
+            ArrayList<Post> filtereddata=new ArrayList<>();
 
             if(keyword.toString().isEmpty())
                 filtereddata.addAll(backup);
             else
             {
-                for(SearchModel obj : backup)
+                for(Post obj : backup)
                 {
-                    if(obj.getHeader().toString().toLowerCase().contains(keyword.toString().toLowerCase()))
+                    if(obj.getTitle().toString().toLowerCase().contains(keyword.toString().toLowerCase()))
                         filtereddata.add(obj);
                 }
             }
@@ -108,7 +116,7 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
         protected void publishResults(CharSequence constraint, FilterResults results)
         {
             data.clear();
-            data.addAll((ArrayList<SearchModel>)results.values);
+            data.addAll((ArrayList<Post>)results.values);
             notifyDataSetChanged();
         }
     };
