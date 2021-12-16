@@ -1,6 +1,8 @@
 package com.scrapper.i170303_i170364_project;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,10 +31,11 @@ public class TodayReadPostAdapter extends RecyclerView.Adapter<TodayReadPostAdap
 
     private List<Post> list;
     Context c;
-
-    public TodayReadPostAdapter(List<Post> list, Context c) {
+    private List<String> sortedPostIDList;
+    public TodayReadPostAdapter(List<Post> list, Context c, List<String> sortedPostIDList) {
         this.list = list;
         this.c = c;
+        this.sortedPostIDList = sortedPostIDList;
     }
 
     public static Bitmap decodeBase64(String input) {
@@ -49,7 +53,7 @@ public class TodayReadPostAdapter extends RecyclerView.Adapter<TodayReadPostAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
 
 
@@ -57,10 +61,30 @@ public class TodayReadPostAdapter extends RecyclerView.Adapter<TodayReadPostAdap
                 .fit()
                 .into(holder.postImage);
 
+        String updatedPostTitle = list.get(position).getTitle();
+        if(updatedPostTitle.length() > 20) {
+            updatedPostTitle = updatedPostTitle.substring(0,20 ) + " ...";
+        }
+        holder.postTitle.setText(updatedPostTitle);
 
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        holder.postTitle.setText(list.get(position).getTitle());
+
+             //   Toast.makeText(c, sortedPostIDList.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(c,BlogPage.class);
+                intent.putExtra("postID",sortedPostIDList.get(position));
+                intent.putExtra("postimage",list.get(position).getImageLink());
+                intent.putExtra("title",list.get(position).getTitle());
+                intent.putExtra("uploadtime",list.get(position).getTimeStamp());
+                intent.putExtra("authorname", list.get(position).getAuthor());
+                intent.putExtra("content", list.get(position).getContent());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                c.startActivity(intent);
+            }
+        });
     }
 
     @Override

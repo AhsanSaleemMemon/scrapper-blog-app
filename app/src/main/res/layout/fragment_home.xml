@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/todayread_recyclerview"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat"
         android:text="For You"
         android:textColor="@color/primary_color"
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/foryou"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="14dp"
         android:fontFamily="@font/montserrat"
         android:orientation="vertical" />
 

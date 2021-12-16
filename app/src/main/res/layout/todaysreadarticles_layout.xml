@@ -2,18 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/postimage"
+        android:layout_marginRight="16dp"
+
         android:layout_width="300dp"
         android:layout_height="180dp"
         android:adjustViewBounds="true"
 
-        android:scaleType="fitCenter"
         android:background="@drawable/wp"
+        android:scaleType="fitCenter"
         app:shapeAppearanceOverlay="@style/roundedimageview" />
 
     <TextView
@@ -23,6 +25,7 @@
         android:layout_below="@+id/postimage"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/montserrat"
+        android:layout_marginLeft="10dp"
         android:maxWidth="240sp"
         android:text="sample title of a blog"
         android:textColor="@color/primary_color"
@@ -35,6 +38,7 @@
         android:layout_below="@id/postimage"
         android:layout_alignRight="@id/postimage"
         android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:src="@drawable/saved" />
 
 

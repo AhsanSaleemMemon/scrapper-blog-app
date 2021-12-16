@@ -1,6 +1,8 @@
 package com.scrapper.i170303_i170364_project;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -23,11 +25,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
 
     private List<Post> list;
+    private List<String> postIDList;
     Context c;
 
-    public PostAdapter(List<Post> list, Context c) {
+    public PostAdapter(List<Post> list, Context c, List<String> postIDList) {
         this.list = list;
         this.c = c;
+        this.postIDList = postIDList;
     }
 
     public static Bitmap decodeBase64(String input) {
@@ -45,13 +49,39 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.postUploadTime.setText(list.get(position).getTimeStamp());
 
 
         Picasso.get().load(list.get(position).getImageLink()).into(holder.postImage);
 
-        holder.postTitle.setText(list.get(position).getTitle());
+        String updatedPostTitle = list.get(position).getTitle();
+        if(updatedPostTitle.length() > 20) {
+            updatedPostTitle = updatedPostTitle.substring(0,20 ) + " ...";
+        }
+
+
+        holder.postTitle.setText(updatedPostTitle);
+
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            final Post post=list.get(position);
+
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(c,BlogPage.class);
+                intent.putExtra("postID",postIDList.get(position));
+                intent.putExtra("postimage",post.getImageLink());
+                intent.putExtra("title",post.getTitle());
+                intent.putExtra("uploadtime",post.getTimeStamp());
+                intent.putExtra("authorname", post.getAuthor());
+                intent.putExtra("content", post.getContent());
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                c.startActivity(intent);
+            }
+        });
     }
 
     @Override

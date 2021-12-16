@@ -53,7 +53,14 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
     {
         final Post temp=data.get(position);
 
-        holder.t1.setText(data.get(position).getTitle());
+
+        String updatedPostTitle = data.get(position).getTitle();
+        if(updatedPostTitle.length() > 20) {
+            updatedPostTitle = updatedPostTitle.substring(0,20 ) + " ...";
+        }
+        holder.t1.setText(updatedPostTitle);
+
+
         holder.t2.setText(data.get(position).getTimeStamp());
         Picasso.get().load(data.get(position).getImageLink()).into(holder.img);
 

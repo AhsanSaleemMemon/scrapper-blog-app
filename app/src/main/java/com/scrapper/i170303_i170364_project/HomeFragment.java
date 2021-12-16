@@ -36,13 +36,18 @@ public class HomeFragment extends Fragment {
     private RecyclerView todayReadRecyclerView;
     private PostAdapter postAdapter;
     private TodayReadPostAdapter todayReadPostAdapter;
+    ArrayList<String> postIDList;
+    ArrayList<String> sortedPostIDList;
+    String postID;
     private List<Post> forYouList;
     private List<Post> todayReadList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FloatingActionButton createFAB;
 
-
+        sortedPostIDList = new ArrayList<>();
+        postIDList = new ArrayList<>();
+        postID = "";
 
         forYouList = new ArrayList<>();
         todayReadList = new ArrayList<>();
@@ -65,6 +70,7 @@ public class HomeFragment extends Fragment {
 
 
 
+
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference db = FirebaseDatabase.getInstance().getReference("Posts");
@@ -76,6 +82,8 @@ public class HomeFragment extends Fragment {
                         Post post = postSnapShot.getValue(Post.class);
 
                         forYouList.add(post);
+                        postID = postSnapShot.getRef().getKey();
+                        postIDList.add(postID);
                     }
 
                 }
@@ -88,14 +96,24 @@ public class HomeFragment extends Fragment {
                 });
 
                 List<Post> updatedTodayReadList = new ArrayList<>();
-                for(int i=0;i<todayReadList.size();i++) {
+                for(int i=4;i>=0;i--) {
                     updatedTodayReadList.add(todayReadList.get(i));
                 }
 
-                todayReadPostAdapter = new TodayReadPostAdapter(updatedTodayReadList, getActivity());
-                todayReadRecyclerView.setAdapter(todayReadPostAdapter);
+                for (int i=4;i>=0;i--){
+                    sortedPostIDList.add(
+                            postIDList.get(forYouList.
+                                    indexOf(updatedTodayReadList.get(i)))
+                    );
+                }
 
-                postAdapter=new PostAdapter(forYouList, getActivity());
+
+
+                todayReadPostAdapter = new TodayReadPostAdapter(updatedTodayReadList, getActivity(), sortedPostIDList);
+                todayReadRecyclerView.setAdapter(todayReadPostAdapter);
+                todayReadRecyclerView.scrollToPosition(updatedTodayReadList.size()-1);
+
+                postAdapter=new PostAdapter(forYouList, getActivity(), postIDList);
                 forYouRecyclerView.setAdapter(postAdapter);
             }
 

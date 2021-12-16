@@ -23,6 +23,7 @@
         android:layout_below="@id/createblog"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:maxLength="55"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
@@ -31,6 +32,7 @@
         android:elevation="5dp"
         android:fontFamily="@font/montserrat"
         android:hint="Enter blog's title"
+        android:minHeight="48dp"
         android:padding="10dp" />
 
 

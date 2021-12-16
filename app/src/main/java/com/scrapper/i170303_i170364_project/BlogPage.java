@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,16 +50,18 @@ public class BlogPage extends AppCompatActivity
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     StorageReference storageReference;
-    String userID="hello";
+    String userID="";
     String postID;
     String uID;
     CircleImageView profilePic;
+    boolean authorPic;
     ImageView downloadButton;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_blog);
+        authorPic = false;
         downloadButton =findViewById(R.id.downloadButton);
         profilePic=findViewById(R.id.pic);
         content = (TextView) findViewById(R.id.content);
@@ -66,6 +69,7 @@ public class BlogPage extends AppCompatActivity
         blogimg = (ShapeableImageView) findViewById(R.id.blogphoto);
         authorName=(TextView) findViewById(R.id.authorName);
         uploadTime=(TextView) findViewById(R.id.uploadTime);
+
         postID=getIntent().getStringExtra("postID");
         String postImgLink =getIntent().getStringExtra("postimage");
         Picasso.get().load(postImgLink).fit().into(blogimg);
@@ -82,8 +86,11 @@ public class BlogPage extends AppCompatActivity
                     for (DataSnapshot postSnapshot: userSnapshot.getChildren()){
                         Post post=postSnapshot.getValue(Post.class);
                         if(postID.equals(postSnapshot.getRef().getKey())) {
-                            uID = postSnapshot.getRef().getParent().getKey();
+                            uID = userSnapshot.getRef().getKey();
                             userID=uID;
+
+//                            Toast.makeText(BlogPage.this, userID, Toast.LENGTH_SHORT).show();
+                            authorPic = true;
 
 
                         //    Toast.makeText(BlogPage.this,userID,Toast.LENGTH_SHORT).show();
@@ -118,8 +125,12 @@ public class BlogPage extends AppCompatActivity
                                 e.printStackTrace();
                             }
 
-
+                            break;
                         }
+                    }
+                    if(authorPic) {
+//                        Toast.makeText(BlogPage.this, "Loop Broken", Toast.LENGTH_SHORT).show();
+                        break;
                     }
                 }
 

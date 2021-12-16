@@ -18,6 +18,8 @@
         android:background="@drawable/wp"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
+        app:cardUseCompatPadding="true"
+        app:elevation="20dp"
         />
 </androidx.cardview.widget.CardView>
 
@@ -32,16 +34,17 @@
         android:layout_toRightOf="@id/imagecardview"
         android:fontFamily="@font/montserrat"
         android:maxWidth="300dp"
+        android:maxLength="25"
         android:text="Sample title of a blog"
         android:textSize="20dp" />
 
     <ImageView
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/saved"
         android:layout_alignParentRight="true"
         android:layout_marginTop="10dp"
-         />
+        android:layout_marginRight="16dp"
+        android:src="@drawable/saved"/>
 
     <TextView
         android:id="@+id/postuploadtime"

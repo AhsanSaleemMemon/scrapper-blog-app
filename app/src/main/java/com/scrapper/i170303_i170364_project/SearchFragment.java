@@ -42,14 +42,17 @@ public class SearchFragment extends Fragment {
     RecyclerView rcv;
     myadapter adapter;
     ArrayList<Post> list =new ArrayList<Post>();
-    ArrayList<String> postIDList =new ArrayList<String>();
-    String postID="";
+    ArrayList<String> postIDList;
+    String postID;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View SearchView = inflater.inflate(R.layout.recyclerview, null);
         //ActionBar bar = SearchView.getActionBar();
         //bar.setBackgroundDrawable(new ColorDrawable("COLOR"));
+        postID = "";
+        postIDList = new ArrayList<>();
+
         rcv = SearchView.findViewById(R.id.recview);
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference("Posts");
