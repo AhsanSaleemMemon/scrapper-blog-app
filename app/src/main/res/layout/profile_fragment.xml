@@ -85,10 +85,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="2"
+        android:weightSum="1"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:orientation="horizontal"
         android:layout_below="@+id/relativelayout2_id"
         android:id="@+id/linearlayout_id"
@@ -99,13 +99,6 @@
 
             />
 
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
-            android:text="Bookmarks"
-            />
 
         <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
@@ -113,6 +106,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
             android:text="Downloads"
+            android:id="@+id/downloadButton"
 
             />
 
@@ -123,8 +117,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linearlayout_id"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_margin="16dp"
         >
 
         <androidx.recyclerview.widget.RecyclerView

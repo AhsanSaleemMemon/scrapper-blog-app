@@ -2,6 +2,7 @@ package com.scrapper.i170303_i170364_project;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
+import android.app.ProgressDialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class CreateBlogActivity extends AppCompatActivity {
     User user;
     String postKey;
     String userKey;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                 mReference.child(userID).child(postKey).setValue(post);
                 Toast.makeText(CreateBlogActivity.this,"Successfully Uploaded rtdb", LENGTH_SHORT).show();
 
+
             }
         });
 
@@ -133,6 +136,9 @@ public class CreateBlogActivity extends AppCompatActivity {
 
 
     public void uploadImage() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Uploading Blog....");
+        progressDialog.show();
         FirebaseDatabase mDatabase=FirebaseDatabase.getInstance();
         DatabaseReference mReference = mDatabase.getReference("Posts");
         postKey=mReference.push().getKey();
@@ -143,11 +149,13 @@ public class CreateBlogActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         //selectImagebtn.setImageURI(imageUri);
-                        Toast.makeText(CreateBlogActivity.this,"Image successfully Uploaded", LENGTH_SHORT).show();
+                        //Toast.makeText(CreateBlogActivity.this,"Image successfully Uploaded", LENGTH_SHORT).show();
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 post.setImageLink(uri.toString());
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
                             }
                         });
 
@@ -156,7 +164,9 @@ public class CreateBlogActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(CreateBlogActivity.this,"Failed to Upload", LENGTH_SHORT).show();
+                if (progressDialog.isShowing())
+                    progressDialog.dismiss();
+                //Toast.makeText(CreateBlogActivity.this,"Failed to Upload", LENGTH_SHORT).show();
             }
         });
     }

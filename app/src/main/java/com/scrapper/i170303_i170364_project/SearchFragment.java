@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -81,11 +82,11 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        //LinearLayoutManager layoutManager=new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false);
-        //rcv.setLayoutManager(layoutManager);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        rcv.setLayoutManager(layoutManager);
 
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2);
-        rcv.setLayoutManager(gridLayoutManager);
+//        GridLayoutManager gridLayoutManager=new GridLayoutManager(getContext(),2);
+//        rcv.setLayoutManager(gridLayoutManager);
         setHasOptionsMenu(true);
         return SearchView;
     }

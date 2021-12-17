@@ -44,7 +44,7 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
     public myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
-        View view=inflater.inflate(R.layout.singlerow,parent,false);
+        View view=inflater.inflate(R.layout.foryouarticles_layout,parent,false);
         return new myviewholder(view);
     }
 
@@ -127,4 +127,5 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
             notifyDataSetChanged();
         }
     };
+
 }

@@ -15,9 +15,9 @@ public class myviewholder extends RecyclerView.ViewHolder
     public myviewholder(@NonNull View itemView)
     {
         super(itemView);
-        img=(ImageView)itemView.findViewById(R.id.img1);
-        t1=(TextView)itemView.findViewById(R.id.t1);
-        t2=(TextView)itemView.findViewById(R.id.t2);
+        img=(ImageView)itemView.findViewById(R.id.postimage);
+        t1=(TextView)itemView.findViewById(R.id.posttitle);
+        t2=(TextView)itemView.findViewById(R.id.postuploadtime);
 
         mView= itemView;
     }

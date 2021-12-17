@@ -34,16 +34,21 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private TextView profileName, profileEmail;
+    MaterialButton downloadButton;
     StorageReference storageReference;
     SharedPreferences sharedPreferences;
     String scrapperPreference;
@@ -51,19 +56,27 @@ public class ProfileFragment extends Fragment {
     String name;
 
     CircleImageView profilePic;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View ProfileView = inflater.inflate(R.layout.profile_fragment,null);
-        MaterialButton logoutButton=ProfileView.findViewById(R.id.logout);
-        profilePic=ProfileView.findViewById(R.id.profilepic);
+        View ProfileView = inflater.inflate(R.layout.profile_fragment, null);
+        MaterialButton logoutButton = ProfileView.findViewById(R.id.logout);
+        profilePic = ProfileView.findViewById(R.id.profilepic);
         profileEmail = ProfileView.findViewById(R.id.profileemail);
         profileName = ProfileView.findViewById(R.id.profilename);
-        mAuth=FirebaseAuth.getInstance();
-
+        mAuth = FirebaseAuth.getInstance();
+        downloadButton = ProfileView.findViewById(R.id.downloadButton);
         scrapperPreference = "scrapperPreference";
-        String namePreferance="name";
-        String imagePreferance="image";
+        String namePreferance = "name";
+        String imagePreferance = "image";
         String emailPreferance = "email";
+
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            FirebaseAuth.getInstance().getCurrentUser().getUid();
+            }
+        });
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,92 +93,90 @@ public class ProfileFragment extends Fragment {
         sharedPreferences = getActivity().getSharedPreferences(scrapperPreference, Context.MODE_PRIVATE);
 
 
-         String currentUserEmail = currentUser.getEmail().toString();
-         if(sharedPreferences.getString(currentUserEmail+"-email", "")!="") {
-           //  Toast.makeText(getActivity(), "Already loaded", Toast.LENGTH_SHORT).show();
+        String currentUserEmail = currentUser.getEmail().toString();
+        if (sharedPreferences.getString(currentUserEmail + "-email", "") != "") {
+            //  Toast.makeText(getActivity(), "Already loaded", Toast.LENGTH_SHORT).show();
 
-             String userName = sharedPreferences.getString(currentUserEmail+"-name", "");
-             String userEmail = sharedPreferences.getString(currentUserEmail+"-email","");
+            String userName = sharedPreferences.getString(currentUserEmail + "-name", "");
+            String userEmail = sharedPreferences.getString(currentUserEmail + "-email", "");
 
-             Bitmap bitmap = decodeBase64(sharedPreferences.getString(currentUserEmail+"-image",""));
-             profilePic.setImageBitmap(bitmap);
-             profileName.setText(userName);
-             profileEmail.setText(userEmail);
-         }
-         else {
-             SharedPreferences.Editor editor = sharedPreferences.edit();
+            Bitmap bitmap = decodeBase64(sharedPreferences.getString(currentUserEmail + "-image", ""));
+            profilePic.setImageBitmap(bitmap);
+            profileName.setText(userName);
+            profileEmail.setText(userEmail);
+        } else {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
 
-             // getting user email and name
+            // getting user email and name
 
-             DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
-             db.addValueEventListener(new ValueEventListener() {
-                 @Override
-                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                     email = dataSnapshot.child("email").getValue().toString();
-                     name = dataSnapshot.child("name").getValue().toString();
-
-
-                     profileEmail.setText(email);
-                     profileName.setText(name);
-
-                     editor.putString(email+"-name", name);
-                     editor.putString(email+"-email", email);
-                     editor.apply();
+            DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUser.getUid());
+            db.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    email = dataSnapshot.child("email").getValue().toString();
+                    name = dataSnapshot.child("name").getValue().toString();
 
 
-                 }
+                    profileEmail.setText(email);
+                    profileName.setText(name);
 
-                 @Override
-                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                 }
-             });
-
-
-             // getting user image
-             storageReference=FirebaseStorage.getInstance().getReference("images/"+imageID);
-             try {
-                 File localFile= File.createTempFile("tempfile",".jpg");
-                 Toast.makeText(getActivity(),"Fetching image",Toast.LENGTH_SHORT).show();
-                 //Toast.makeText(getActivity(),imageID,Toast.LENGTH_SHORT).show();
-                 storageReference.getFile(localFile)
-                         .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                             @Override
-                             public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-
-                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-
-                                 profilePic.setImageBitmap(bitmap);
+                    editor.putString(email + "-name", name);
+                    editor.putString(email + "-email", email);
+                    editor.apply();
 
 
+                }
 
-                                 editor.putString(email+"-image", encodeTobase64(bitmap));
-                                 editor.apply();
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-
-                             }
-                         }).addOnFailureListener(new OnFailureListener() {
-                     @Override
-                     public void onFailure(@NonNull Exception e) {
-                         Toast.makeText(getActivity(),"Fetching image failed",Toast.LENGTH_SHORT).show();
-                     }
-                 });
+                }
+            });
 
 
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
+            // getting user image
+            storageReference = FirebaseStorage.getInstance().getReference("images/" + imageID);
+            try {
+                File localFile = File.createTempFile("tempfile", ".jpg");
+                Toast.makeText(getActivity(), "Fetching image", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),imageID,Toast.LENGTH_SHORT).show();
+                storageReference.getFile(localFile)
+                        .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
 
-             editor.commit();
+                                Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 
-         }
+                                profilePic.setImageBitmap(bitmap);
+
+
+                                editor.putString(email + "-image", encodeTobase64(bitmap));
+                                editor.apply();
+
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getActivity(), "Fetching image failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            editor.commit();
+
+        }
 
 //        String storedName = sharedPreferences.getString(currentUser.getEmail()+"name","");
 //        if(storedName!=null) {
 //            profileName.setText(storedName);
 //        }
 
-
+        //    loadTextFile("hello");
 
         return ProfileView;
     }
@@ -207,6 +218,39 @@ public class ProfileFragment extends Fragment {
                 .decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
+    public void loadTextFile(String fileName) {
+        fileName = fileName + ".txt";
+        FileInputStream fis = null;
+
+        try {
+            fis = getContext().openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String text;
+            String titles = "";
+
+            while ((text = br.readLine()) != null) {
+                titles += text + " ";
+            }
+
+            Toast.makeText(getContext(), titles, Toast.LENGTH_LONG).show();
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }
 

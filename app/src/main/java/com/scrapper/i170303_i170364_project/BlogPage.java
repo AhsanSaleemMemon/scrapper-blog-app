@@ -7,14 +7,16 @@ import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,46 +34,54 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class BlogPage extends AppCompatActivity
-{
+public class BlogPage extends AppCompatActivity {
     ShapeableImageView blogimg;
-    TextView content,title, authorName, uploadTime;
+    TextView content, title, authorName, uploadTime;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     StorageReference storageReference;
-    String userID="";
+    String userID = "hello";
     String postID;
     String uID;
     CircleImageView profilePic;
-    boolean authorPic;
     ImageView downloadButton;
+    InputStream inputStream = null;
+    String userImagePath="";
+    String blogImagePath="";
+
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_blog);
-        authorPic = false;
-        downloadButton =findViewById(R.id.downloadButton);
-        profilePic=findViewById(R.id.pic);
+        downloadButton = findViewById(R.id.downloadButton);
+        profilePic = findViewById(R.id.pic);
         content = (TextView) findViewById(R.id.content);
-        title=(TextView) findViewById(R.id.title);
+        title = (TextView) findViewById(R.id.title);
         blogimg = (ShapeableImageView) findViewById(R.id.blogphoto);
-        authorName=(TextView) findViewById(R.id.authorName);
-        uploadTime=(TextView) findViewById(R.id.uploadTime);
-
-        postID=getIntent().getStringExtra("postID");
-        String postImgLink =getIntent().getStringExtra("postimage");
+        authorName = (TextView) findViewById(R.id.authorName);
+        uploadTime = (TextView) findViewById(R.id.uploadTime);
+        postID = getIntent().getStringExtra("postID");
+        String postImgLink = getIntent().getStringExtra("postimage");
         Picasso.get().load(postImgLink).fit().into(blogimg);
 
 
@@ -81,24 +91,21 @@ public class BlogPage extends AppCompatActivity
         mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot userSnapshot: snapshot.getChildren()){
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
 
-                    for (DataSnapshot postSnapshot: userSnapshot.getChildren()){
-                        Post post=postSnapshot.getValue(Post.class);
-                        if(postID.equals(postSnapshot.getRef().getKey())) {
-                            uID = userSnapshot.getRef().getKey();
-                            userID=uID;
-
-//                            Toast.makeText(BlogPage.this, userID, Toast.LENGTH_SHORT).show();
-                            authorPic = true;
+                    for (DataSnapshot postSnapshot : userSnapshot.getChildren()) {
+                        Post post = postSnapshot.getValue(Post.class);
+                        if (postID.equals(postSnapshot.getRef().getKey())) {
+                            uID = postSnapshot.getRef().getParent().getKey();
+                            userID = uID;
 
 
-                        //    Toast.makeText(BlogPage.this,userID,Toast.LENGTH_SHORT).show();
+                            //    Toast.makeText(BlogPage.this,userID,Toast.LENGTH_SHORT).show();
 
                             // getting user image
-                            storageReference= FirebaseStorage.getInstance().getReference("images/"+userID);
+                            storageReference = FirebaseStorage.getInstance().getReference("images/" + userID);
                             try {
-                                File localFile= File.createTempFile("tempfile",".jpg");
+                                File localFile = File.createTempFile("tempfile", ".jpg");
                                 //Toast.makeText(getContext(),"Fetching image",Toast.LENGTH_SHORT).show();
                                 //Toast.makeText(getActivity(),imageID,Toast.LENGTH_SHORT).show();
                                 storageReference.getFile(localFile)
@@ -109,7 +116,6 @@ public class BlogPage extends AppCompatActivity
                                                 Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
 
                                                 profilePic.setImageBitmap(bitmap);
-
 
 
                                             }
@@ -125,12 +131,8 @@ public class BlogPage extends AppCompatActivity
                                 e.printStackTrace();
                             }
 
-                            break;
+
                         }
-                    }
-                    if(authorPic) {
-//                        Toast.makeText(BlogPage.this, "Loop Broken", Toast.LENGTH_SHORT).show();
-                        break;
                     }
                 }
 
@@ -142,7 +144,7 @@ public class BlogPage extends AppCompatActivity
             }
         });
 
-       // img.setImageResource(getIntent().getIntExtra("postimage",0));
+        // img.setImageResource(getIntent().getIntExtra("postimage",0));
         content.setText(getIntent().getStringExtra("content"));
         title.setText(getIntent().getStringExtra("title"));
         authorName.setText(getIntent().getStringExtra("authorname"));
@@ -154,40 +156,40 @@ public class BlogPage extends AppCompatActivity
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fileName =userID+"-"+postID+"-"+"pTitle";
+                String fileName = userID + "-" + postID + "-" + "pTitle";
                 try {
-                    saveTextFile(fileName,title.getText().toString());
+                    saveTextFile(fileName, title.getText().toString());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                fileName =userID+"-"+postID+"-"+"pContent";
+                fileName = userID + "-" + postID + "-" + "pContent";
                 try {
-                    saveTextFile(fileName,content.getText().toString());
+                    saveTextFile(fileName, content.getText().toString());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                fileName =userID+"-"+postID+"-"+"pUploadTime";
+                fileName = userID + "-" + postID + "-" + "pUploadTime";
                 try {
-                    saveTextFile(fileName,uploadTime.getText().toString());
+                    saveTextFile(fileName, uploadTime.getText().toString());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                fileName =userID+"-"+postID+"-"+"pauthorName";
+                fileName = userID + "-" + postID + "-" + "pauthorName";
                 try {
-                    saveTextFile(fileName,authorName.getText().toString());
+                    saveTextFile(fileName, authorName.getText().toString());
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 
-                fileName ="AllAuthorsIDs";
+                fileName = "AllAuthorsIDs";
                 try {
-                    saveTextFile(fileName,userID);
+                    saveTextFile(fileName, userID);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                fileName ="AllPostsIDs";
+                fileName = "AllPostsIDs";
                 try {
-                    saveTextFile(fileName,postID);
+                    saveTextFile(fileName, postID);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -200,41 +202,79 @@ public class BlogPage extends AppCompatActivity
 //                saveTextFile(fileName,postImagePath);
 
 
-
                 //download author's pic
-//                storageReference = FirebaseStorage.getInstance().getReference("images/"+userID);
-//                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//                    @Override
-//                    public void onSuccess(Uri uri) {
-//                        Bitmap bitmap = decodeBase64(uri.toString());
-//                        String userImagePath=saveImageToInternalStorage(bitmap,userID);
-//                        saveTextFile("AllUsersImagesPath",userImagePath);
-//                    }
-//                });
+                storageReference = FirebaseStorage.getInstance().getReference("images/" + userID);
 
+                try {
+                    File localFile = File.createTempFile("tempfile", ".jpg");
+                    File localFile2 = File.createTempFile("tempfile2", ".jpg");
+                    storageReference.getFile(localFile)
+                            .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+
+                                    //save user image path
+                                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                                    Bitmap bitmap2 = BitmapFactory.decodeFile(localFile2.getAbsolutePath());
+                                    userImagePath = saveImageToInternalStorage(bitmap, userID+"-"+"AuthorImage");
+                                    userImagePath+="/"+userID+"-"+"AuthorImage";
+                                    try {
+                                        saveTextFile("AllUsersImagesPath", userImagePath);
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    //save blog image path
+                                    blogImagePath = saveImageToInternalStorage(bitmap, postID+"-"+"BlogImage");
+                                    blogImagePath +="/"+postID+"-"+"BlogImage";
+                                    try {
+                                        saveTextFile("AllBlogsImagesPath", blogImagePath);
+                                        Toast.makeText(BlogPage.this,"Blog saved",Toast.LENGTH_SHORT).show();
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            //Toast.makeText(getActivity(), "Fetching image failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                ///
 
             }
         });
-
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-            getSupportActionBar().hide();
+        getSupportActionBar().hide();
     }
 
-    public void saveTextFile(String fileName,String text) throws FileNotFoundException {
+    public void saveTextFile(String fileName, String text) throws FileNotFoundException {
 
-        fileName=fileName+".txt";
+        fileName = fileName + ".txt";
         FileOutputStream fos = null;
 
         try {
-            fos = new FileOutputStream(getFilesDir() + "/" +fileName,true);
+            fos = new FileOutputStream(getFilesDir() + "/" + fileName, true);
             fos.write(text.getBytes());
+            fos.write('\n');
 
-            Toast.makeText(this, "Saved to " + getFilesDir() + "/" + fileName,
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + fileName,
+                    //Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -250,13 +290,13 @@ public class BlogPage extends AppCompatActivity
         }
     }
 
-    private String saveImageToInternalStorage(Bitmap bitmapImage,String fileName){
-        fileName = fileName+".jpg";
+    private String saveImageToInternalStorage(Bitmap bitmapImage, String fileName) {
+        fileName = fileName + ".jpg";
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
         // Create imageDir
-        File mypath=new File(directory,fileName);
+        File mypath = new File(directory, fileName);
 
         FileOutputStream fos = null;
         try {
@@ -288,29 +328,24 @@ public class BlogPage extends AppCompatActivity
     }
 
 
-    public static Bitmap decodeBase64(String input) {
-        byte[] decodedByte = Base64.decode(input, 0);
-        return BitmapFactory
-                .decodeByteArray(decodedByte, 0, decodedByte.length);
-    }
-
     public void loadTextFile(String fileName) {
-        fileName =fileName+".txt";
+        fileName = fileName + ".txt";
         FileInputStream fis = null;
 
         try {
+
             fis = openFileInput(fileName);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();
             String text;
-            String titles ="";
+            String titles = "";
 
             while ((text = br.readLine()) != null) {
-                titles+= text+" ";
+                titles += text + " ";
             }
 
-            Toast.makeText(BlogPage.this,titles,Toast.LENGTH_LONG).show();
+            Toast.makeText(BlogPage.this, titles, Toast.LENGTH_LONG).show();
 
 
         } catch (FileNotFoundException e) {
@@ -324,6 +359,33 @@ public class BlogPage extends AppCompatActivity
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    void savefile(URI sourceuri) {
+        String sourceFilename = sourceuri.getPath();
+        String destinationFilename = android.os.Environment.getExternalStorageDirectory().getPath() + File.separatorChar + "abc.mp3";
+
+        BufferedInputStream bis = null;
+        BufferedOutputStream bos = null;
+
+        try {
+            bis = new BufferedInputStream(new FileInputStream(sourceFilename));
+            bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
+            byte[] buf = new byte[1024];
+            bis.read(buf);
+            do {
+                bos.write(buf);
+            } while (bis.read(buf) != -1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bis != null) bis.close();
+                if (bos != null) bos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
