@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.faltenreich.skeletonlayout.Skeleton;
+import com.faltenreich.skeletonlayout.SkeletonLayoutUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,6 +42,7 @@ public class HomeFragment extends Fragment {
     ArrayList<String> sortedPostIDList;
     String postID;
     private List<Post> forYouList;
+    private Skeleton todayReadSkeleton, forYouSkeleton;
     private List<Post> todayReadList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +51,8 @@ public class HomeFragment extends Fragment {
         sortedPostIDList = new ArrayList<>();
         postIDList = new ArrayList<>();
         postID = "";
+
+
 
         forYouList = new ArrayList<>();
         todayReadList = new ArrayList<>();
@@ -62,6 +67,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
+     //   skeleton = HomeView.findViewById(R.id.skeletonLayout);
+
         forYouRecyclerView = HomeView.findViewById(R.id.foryou_recyclerview);
         forYouRecyclerView.setLayoutManager(new LinearLayoutManager(HomeView.getContext()));
 
@@ -69,7 +76,11 @@ public class HomeFragment extends Fragment {
         todayReadRecyclerView.setLayoutManager(new LinearLayoutManager(HomeView.getContext(), LinearLayoutManager.HORIZONTAL, true));
 
 
+        todayReadSkeleton = SkeletonLayoutUtils.applySkeleton(todayReadRecyclerView, R.layout.todaysreadarticles_layout);
+        todayReadSkeleton.showSkeleton();
 
+        forYouSkeleton = SkeletonLayoutUtils.applySkeleton(forYouRecyclerView, R.layout.foryouarticles_layout);
+        forYouSkeleton.showSkeleton();
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -137,5 +148,10 @@ public class HomeFragment extends Fragment {
         if (activity != null) {
             activity.getSupportActionBar().hide();
         }
+    }
+
+    private void onDataLoaded() {
+        todayReadSkeleton.showOriginal();
+        forYouSkeleton.showOriginal();
     }
 }

@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuthSettings;
 public class LoginActivity extends AppCompatActivity {
 
     TextView goToSignUp;
+    TextView forgotPassword;
     FirebaseAuth mAuth;
 
     TextInputEditText email;
@@ -44,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
 
         email = findViewById(R.id.emailField);
         password = findViewById(R.id.passField);
+
+
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-        TextView forgotPass = findViewById(R.id.forgot_pass); // forgot password link
+        forgotPassword = findViewById(R.id.forgot_pass); // forgot password link
         // Redirects to reset page if user forgot password
-        forgotPass.setOnClickListener(new View.OnClickListener() {
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, ResetActivity.class);
@@ -99,6 +102,8 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
 
 
     }
@@ -126,4 +131,20 @@ public class LoginActivity extends AppCompatActivity {
 
         return filledFields;
     }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSupportActionBar().hide();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
+
+
+
 }

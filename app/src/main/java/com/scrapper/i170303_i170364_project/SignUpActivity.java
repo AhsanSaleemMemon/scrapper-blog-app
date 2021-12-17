@@ -154,5 +154,11 @@ public class SignUpActivity extends AppCompatActivity {
         return filledFields;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSupportActionBar().hide();
+    }
+
 
 }

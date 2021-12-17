@@ -32,14 +32,14 @@
         android:textSize="20dp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_below="@id/postimage"
-        android:layout_alignRight="@id/postimage"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/saved" />
+<!--    <ImageView-->
+<!--        android:layout_width="30dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_below="@id/postimage"-->
+<!--        android:layout_alignRight="@id/postimage"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginRight="10dp"-->
+<!--        android:src="@drawable/saved" />-->
 
 
 

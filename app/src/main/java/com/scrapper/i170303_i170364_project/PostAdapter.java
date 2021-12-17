@@ -53,15 +53,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.postUploadTime.setText(list.get(position).getTimeStamp());
 
 
-        Picasso.get().load(list.get(position).getImageLink()).into(holder.postImage);
+        Picasso.get()
+                .load(list.get(position).getImageLink())
+                .fit()
+                .into(holder.postImage);
 
         String updatedPostTitle = list.get(position).getTitle();
-        if(updatedPostTitle.length() > 20) {
-            updatedPostTitle = updatedPostTitle.substring(0,20 ) + " ...";
+        if(updatedPostTitle.length() > 25) {
+            updatedPostTitle = updatedPostTitle.substring(0,25 ) + " ...";
         }
 
 
         holder.postTitle.setText(updatedPostTitle);
+
+        int postWordCount = countWordsUsingSplit(list.get(position).getContent());
+
+        if(postWordCount > 200) {
+           int mins = postWordCount/200;
+           holder.postReadTime.setText(Integer.toString(mins) + " min read" );
+
+        }
+        else {
+            holder.postReadTime.setText("1 min read");
+        }
+
+
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +106,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView authorName, postTitle, postContent, postUploadTime;
+        TextView authorName, postTitle, postContent, postUploadTime, postReadTime;
         ShapeableImageView postImage;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,7 +114,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postTitle = (TextView) itemView.findViewById(R.id.posttitle);
             postImage = itemView.findViewById(R.id.postimage);
             postUploadTime = itemView.findViewById(R.id.postuploadtime);
+            postReadTime = itemView.findViewById(R.id.postreadtime);
 
         }
     }
+
+    public static int countWordsUsingSplit(String input) {
+        if (input == null || input.isEmpty()) {
+            return 0;
+        }
+
+        String[] words = input.split("\\s+");
+        return words.length;
+    }
+
+
+
+
 }

@@ -75,12 +75,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/login_btn"
-            android:layout_marginTop="10dp"
-            android:textSize="18sp"
-
-            android:textColor="@color/primary_color"
             android:layout_centerHorizontal="true"
-            android:text="Forgot Password?"/>
+            android:layout_marginTop="10dp"
+
+            android:text="Forgot Password?"
+            android:textColor="@color/primary_color"
+            android:textSize="18sp" />
 
 
         <LinearLayout

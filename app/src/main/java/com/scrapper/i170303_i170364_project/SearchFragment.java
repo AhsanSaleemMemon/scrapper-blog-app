@@ -52,7 +52,6 @@ public class SearchFragment extends Fragment {
         //bar.setBackgroundDrawable(new ColorDrawable("COLOR"));
         postID = "";
         postIDList = new ArrayList<>();
-
         rcv = SearchView.findViewById(R.id.recview);
         mDatabase = FirebaseDatabase.getInstance();
         mReference = mDatabase.getReference("Posts");

@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,6 +21,7 @@ public class WelcomeScreenActivity extends AppCompatActivity {
 //    String prevStarted = "yes";
     MaterialButton signUpPage;
     MaterialButton loginPage;
+    SharedPreferences sharedPreferences;
     FirebaseUser user;
 
 
@@ -49,15 +52,30 @@ public class WelcomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_screen);
 
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        Intent i;
-        if (user != null){
-            i = new Intent(WelcomeScreenActivity.this, MainActivity.class);
-        }
-        else {
-            i = new Intent(WelcomeScreenActivity.this, LoginActivity.class);
-        }
-        startActivity(i);
+        sharedPreferences = getSharedPreferences(getString(R.string.app_name), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+        String welcomeScreenBool = sharedPreferences.getString("welcomeScreenBool", "");
+       if(welcomeScreenBool.equals("true")) {
+           Toast.makeText(WelcomeScreenActivity.this, "Preference already stored", Toast.LENGTH_SHORT).show();
+           user = FirebaseAuth.getInstance().getCurrentUser();
+           Intent i;
+           if (user != null){
+               i = new Intent(WelcomeScreenActivity.this, MainActivity.class);
+           }
+           else {
+               i = new Intent(WelcomeScreenActivity.this, LoginActivity.class);
+           }
+           startActivity(i);
+       }
+       else {
+           Toast.makeText(WelcomeScreenActivity.this, "Stored the Preference", Toast.LENGTH_SHORT).show();
+           editor.putString("welcomeScreenBool", "true");
+           editor.apply();
+           editor.commit();
+       }
 
 
         signUpPage = findViewById(R.id.go_to_sign_up);
@@ -80,6 +98,12 @@ public class WelcomeScreenActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSupportActionBar().hide();
     }
 
 

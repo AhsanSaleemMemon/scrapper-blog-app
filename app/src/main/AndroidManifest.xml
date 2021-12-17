@@ -16,6 +16,7 @@
         <activity android:name=".CreateBlogActivity"></activity>
         <activity android:name=".BlogPage"></activity>
         <activity android:name=".WelcomeScreenActivity"
+            android:noHistory="true"
             android:launchMode="singleInstance">
 
             <intent-filter>
@@ -27,7 +28,13 @@
         </activity>
         <activity android:name=".SignUpActivity" >
         </activity>
-        <activity android:name=".MainActivity"/>
+
+        <activity android:name=".ResetActivity"></activity>
+        <activity android:name=".MainActivity"
+
+            >
+
+        </activity>
 
         <meta-data
             android:name="preloaded_fonts"
