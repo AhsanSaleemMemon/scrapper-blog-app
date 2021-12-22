@@ -64,10 +64,11 @@ public class SearchFragment extends Fragment {
 
                     for (DataSnapshot postSnapshot: userSnapshot.getChildren()){
                         Post post=postSnapshot.getValue(Post.class);
+                        post.setpostID(postSnapshot.getRef().getKey());
                         //Post sModel = new SearchModel(post.getTitle(),post.getTimeStamp(),post.getImageLink());
                         list.add(post);
-                        postID= postSnapshot.getRef().getKey();
-                        postIDList.add(postID);
+
+                        //postIDList.add(postID);
 
                     }
                 }

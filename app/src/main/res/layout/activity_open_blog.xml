@@ -30,9 +30,31 @@
             android:id="@+id/downloadButton"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="10dp"
             android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
             android:background="@drawable/download_button" />
+
+        <ImageView
+            android:id="@+id/deleteButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toStartOf="@+id/downloadButton"
+            android:layout_toLeftOf="@+id/downloadButton"
+            android:background="@drawable/delete" />
+
+        <ImageView
+            android:id="@+id/editButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/deleteButton"
+
+            android:layout_toLeftOf="@+id/deleteButton"
+            android:background="@drawable/edit" />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/blogphoto"

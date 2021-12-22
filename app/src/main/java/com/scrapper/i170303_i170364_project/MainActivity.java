@@ -24,6 +24,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
 
 
     BottomNavigationView bottomNavigator;
-
     private FirebaseAuth mAuth;
     private TextView profileName, profileEmail;
     StorageReference storageReference;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         bottomNavigator = findViewById(R.id.bottomNav);
@@ -87,5 +87,6 @@ public class MainActivity extends AppCompatActivity implements  BottomNavigation
         }
         return loadFragment(fragment);
     }
+
 
 }

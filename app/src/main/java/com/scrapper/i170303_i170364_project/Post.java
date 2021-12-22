@@ -6,8 +6,18 @@ import java.util.Date;
 public class Post {
     private String author,title,content,imageLink;
     private String timeStamp;
+    private String postID;
 
     public Post() {
+    }
+
+
+    public String getpostID() {
+        return postID;
+    }
+
+    public void setpostID(String postID) {
+        this.postID = postID;
     }
 
     public String getAuthor() {

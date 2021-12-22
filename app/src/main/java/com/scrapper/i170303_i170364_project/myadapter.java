@@ -71,7 +71,8 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
             public void onClick(View v) {
 
                 Intent intent=new Intent(context,BlogPage.class);
-                intent.putExtra("postID",postIDList.get(position));
+                intent.putExtra("postID",temp.getpostID());
+                //intent.putExtra("postID",postIDList.get(position));
               intent.putExtra("postimage",temp.getImageLink());
                 intent.putExtra("title",temp.getTitle());
                 intent.putExtra("uploadtime",temp.getTimeStamp());
@@ -119,6 +120,7 @@ public class myadapter extends RecyclerView.Adapter<myviewholder> implements Fil
             return results;
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override  // main UI thread
         protected void publishResults(CharSequence constraint, FilterResults results)
         {

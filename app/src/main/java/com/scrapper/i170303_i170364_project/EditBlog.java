@@ -2,14 +2,9 @@ package com.scrapper.i170303_i170364_project;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +16,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,17 +37,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class CreateBlogActivity extends AppCompatActivity {
+public class EditBlog extends AppCompatActivity {
 
     ImageView mCoverImage;
     MaterialButton mPostButton;
     Uri imageUri;
     StorageReference storageReference;
     ActivityResultLauncher<String> mGetContent;
-    Post post = new Post();
-    User user;
-    String postKey;
-    String userKey;
+    String prevPostID;
+    String prevAuthorID;
     ProgressDialog progressDialog;
 
     @Override
@@ -68,7 +58,7 @@ public class CreateBlogActivity extends AppCompatActivity {
         mContent = (EditText) findViewById(R.id.content_id);
         mCoverImage = findViewById(R.id.upload_image);
         mPostButton = findViewById(R.id.post_btn);
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mReference = mDatabase.getReference("Users");
         //userKey=mReference.push().getKey();
@@ -78,75 +68,30 @@ public class CreateBlogActivity extends AppCompatActivity {
         //displaying this date on IST timezone
         DateFormat df = new SimpleDateFormat("dd-MM-yy");
         df.setTimeZone(TimeZone.getTimeZone("Asia/Karachi"));
-        String IST = df.format(today);
-        post.setTimeStamp(IST);
+        String time = df.format(today);
 
-        mReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String usersInDatabase = ds.child(userID).getKey().toString();
-                    //Toast.makeText(CreateBlogActivity.this, usersInDatabase, LENGTH_SHORT).show();
-                    if (usersInDatabase.equals(userID)) {
-                        User user = ds.getValue(User.class);
-//                        String userName="";
-//                        userName= (String) ds.child(userID).child("name").getValue();
-//                        Toast.makeText(CreateBlogActivity.this,userName,LENGTH_SHORT).show();
-                        post.setAuthor(user.name);
-                        //Toast.makeText(CreateBlogActivity.this, "author: " + user.name, LENGTH_SHORT).show();
-                        break;
-                    }
-                }
+        Intent intent = getIntent();
+        prevPostID = intent.getStringExtra("postID");
+        prevAuthorID = intent.getStringExtra("authorID");
+        String prevTitle = intent.getStringExtra("title");
+        String prevContent = intent.getStringExtra("content");
 
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        mTitle.setText(prevTitle);
+        mContent.setText(prevContent);
 
 
         mPostButton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
                 DatabaseReference mReference = mDatabase.getReference("Posts");
                 //postKey=mReference.push().getKey();
-                String title = mTitle.getText().toString();
-                String content = mContent.getText().toString();
-                post.setTitle(title);
-                post.setContent(content);
-                mReference.child(userID).child(postKey).setValue(post);
-                String notification_msg="Title: " + title;
-                NotificationCompat.Builder builder=new NotificationCompat.Builder(getApplicationContext())
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
-                        .setContentTitle("Blog Uploaded")
-                        .setContentText(notification_msg)
-                        .setAutoCancel(true)
-                        .setPriority(NotificationCompat.PRIORITY_HIGH);
-                NotificationManager notificationManager=(NotificationManager)getSystemService(
-                        Context.NOTIFICATION_SERVICE
-                );
-                Intent intent = new Intent(getApplicationContext(), CreateBlogActivity.class);
-                PendingIntent pendingIntent=PendingIntent.getActivity(getApplicationContext(),0,intent
-                        ,PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(pendingIntent);
-
-                NotificationChannel channel = new NotificationChannel(
-                        "1",
-                        "Scrapper",
-                        NotificationManager.IMPORTANCE_HIGH
-                );
-                if (notificationManager != null) {
-                    notificationManager.createNotificationChannel(channel);
-                }
-                builder.setChannelId("1");
-                notificationManager.notify(0,builder.build());
-
-                Toast.makeText(CreateBlogActivity.this, "Successfully Uploaded rtdb", LENGTH_SHORT).show();
-
+                String newTitle = mTitle.getText().toString();
+                String newContent = mContent.getText().toString();
+                mReference.child(prevAuthorID).child(prevPostID).child("content").setValue(newContent);
+                mReference.child(prevAuthorID).child(prevPostID).child("title").setValue(newTitle);
+                mReference.child(prevAuthorID).child(prevPostID).child("timeStamp").setValue(time);
+                Toast.makeText(EditBlog.this, "Successfully Uploaded rtdb", LENGTH_SHORT).show();
 
 
             }
@@ -176,12 +121,12 @@ public class CreateBlogActivity extends AppCompatActivity {
 
     public void uploadImage() {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Uploading Image....");
+        progressDialog.setTitle("Uploading Blog....");
         progressDialog.show();
         FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
         DatabaseReference mReference = mDatabase.getReference("Posts");
-        postKey = mReference.push().getKey();
-        String fileName = postKey;
+
+        String fileName = prevPostID;
         storageReference = FirebaseStorage.getInstance().getReference("Blogimages/" + fileName);
         storageReference.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -192,7 +137,7 @@ public class CreateBlogActivity extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-                                post.setImageLink(uri.toString());
+                                mReference.child(prevAuthorID).child(prevPostID).child("imageLink").setValue(uri.toString());
                                 if (progressDialog.isShowing())
                                     progressDialog.dismiss();
                             }

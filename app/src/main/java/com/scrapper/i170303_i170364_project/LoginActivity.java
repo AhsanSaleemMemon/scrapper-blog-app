@@ -21,6 +21,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthSettings;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class LoginActivity extends AppCompatActivity {
 
     TextView goToSignUp;
@@ -67,6 +71,11 @@ public class LoginActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         Toast.makeText(LoginActivity.this, "Login Success!.",
                                                 Toast.LENGTH_SHORT).show();
+                                        try {
+                                            saveTextFile("loggedInUser", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        } catch (FileNotFoundException e) {
+                                            e.printStackTrace();
+                                        }
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent); // Go to main page
                                     } else {
@@ -146,5 +155,31 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    public void saveTextFile(String fileName, String text) throws FileNotFoundException {
+
+        fileName = fileName + ".txt";
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(getFilesDir() + "/" + fileName, false);
+            fos.write(text.getBytes());
+
+
+            //Toast.makeText(this, "Saved to " + getFilesDir() + "/" + fileName,
+            //Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 }

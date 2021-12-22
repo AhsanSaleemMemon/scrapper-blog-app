@@ -1,25 +1,31 @@
 package com.scrapper.i170303_i170364_project;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.faltenreich.skeletonlayout.Skeleton;
+import com.faltenreich.skeletonlayout.SkeletonLayoutUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
@@ -40,43 +46,178 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     private FirebaseAuth mAuth;
     private TextView profileName, profileEmail;
-    MaterialButton downloadButton;
+    MaterialButton download_Button, myBlogs_Button;
     StorageReference storageReference;
     SharedPreferences sharedPreferences;
     String scrapperPreference;
     String email;
     String name;
+    private RecyclerView downloadRecyclerView, myBlogsRecyclerView;
 
+    private OfflinePostAdapter offlinePostAdapter;
+    private PostAdapter myBlogsAdapter;
+    private ArrayList<String> postIDList;
+    private Skeleton skeleton;
+    private String postID;
     CircleImageView profilePic;
+    ArrayList <OfflinePost> downloadedPostList;
+    ArrayList <Post> myPostsList;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View ProfileView = inflater.inflate(R.layout.profile_fragment, null);
         MaterialButton logoutButton = ProfileView.findViewById(R.id.logout);
+        downloadRecyclerView = ProfileView.findViewById(R.id.bookmarksordownloads_recyclerview);
+
+
+        postIDList = new ArrayList<>();
         profilePic = ProfileView.findViewById(R.id.profilepic);
         profileEmail = ProfileView.findViewById(R.id.profileemail);
         profileName = ProfileView.findViewById(R.id.profilename);
         mAuth = FirebaseAuth.getInstance();
-        downloadButton = ProfileView.findViewById(R.id.downloadButton);
+        download_Button = ProfileView.findViewById(R.id.download_Button);
+        myBlogs_Button = ProfileView.findViewById(R.id.myblogs_button);
         scrapperPreference = "scrapperPreference";
         String namePreferance = "name";
         String imagePreferance = "image";
         String emailPreferance = "email";
 
-        downloadButton.setOnClickListener(new View.OnClickListener() {
+
+
+
+        download_Button.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View v) {
-            FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                skeleton = SkeletonLayoutUtils.applySkeleton(downloadRecyclerView, R.layout.foryouarticles_layout);
+                skeleton.showSkeleton();
+
+                downloadedPostList =new ArrayList<OfflinePost>();
+
+//                if(downloadRecyclerView.getVisibility()==View.INVISIBLE) {
+//                    downloadRecyclerView.setVisibility(View.VISIBLE);
+//                }
+                FileInputStream fis = null;
+                String postID;
+                List<Post> downloadList = new ArrayList<>();
+                ArrayList<String> auth_postIDList = new ArrayList<String>();
+                String currentUser = loadTextFile("loggedInUser");
+                //currentUser = currentUser.replaceAll("\\s+","");
+                //Toast.makeText(getContext(), currentUser, Toast.LENGTH_LONG).show();
+                try {
+                    fis = getContext().openFileInput(currentUser + "-authID-postIDlist.txt");
+                    InputStreamReader isr = new InputStreamReader(fis);
+                    BufferedReader br = new BufferedReader(isr);
+                    //StringBuilder sb = new StringBuilder();
+                    String text;
+
+                    int i = 0;
+
+                    while ((text = br.readLine()) != null) {
+                        auth_postIDList.add(text);
+
+                        i++;
+                    }
+                    //Toast.makeText(getContext(), "file exist", Toast.LENGTH_LONG).show();
+
+
+                    for (int j = 0; j < auth_postIDList.size(); j++) {
+                        String auth_postID = auth_postIDList.get(j);
+                        String[] auth_postID_split = auth_postID.split(",");
+                        //add comma between em too
+                        String postTitleToDisplay = loadTextFile(currentUser + "," + auth_postID_split[1] + "-pTitle");
+                        String postContentToDisplay = loadTextFile(currentUser + "," + auth_postID_split[1] + "-pContent");
+                        String postUploadTimeToDisplay = loadTextFile(currentUser + "," + auth_postID_split[1] + "-pUploadTime");
+                        String postAuthorNameToDisplay = loadTextFile(currentUser + "," + auth_postID_split[1] + "-pauthorName");
+                        String postImageAdress = loadTextFile(currentUser + "," + auth_postID_split[1] + "-blogImageAdress");
+                        String postAuthorImageAdress = loadTextFile(currentUser + "-" + auth_postID_split[0] + "-authorImageAdress");
+
+                        OfflinePost post = new OfflinePost( postAuthorNameToDisplay, postUploadTimeToDisplay,  postTitleToDisplay, postContentToDisplay,postImageAdress, postAuthorImageAdress);
+                        downloadedPostList.add(post);
+
+
+
+
+//                        Toast.makeText(getContext(), String.valueOf(j), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), postContentToDisplay, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), postTitleToDisplay, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), postUploadTimeToDisplay, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), postAuthorNameToDisplay, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), postImageAdress, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getContext(), postAuthorImageAdress, Toast.LENGTH_LONG).show();
+
+
+
+                    }
+
+                } catch (FileNotFoundException e) {
+                    Toast.makeText(getContext(), "file not found", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                offlinePostAdapter = new OfflinePostAdapter(downloadedPostList, getActivity(),auth_postIDList);
+                downloadRecyclerView.setAdapter(offlinePostAdapter);
+
+            }
+
+        });
+
+        myBlogs_Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //downloadRecyclerView.setVisibility(View.INVISIBLE);
+
+                if(isNetworkAvailable()) {
+                    myPostsList = new ArrayList<>();
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    DatabaseReference db = FirebaseDatabase.getInstance().getReference("Posts/" + currentUser.getUid());
+                    db.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot postSnapShot : snapshot.getChildren()) {
+
+                                Post post = postSnapShot.getValue(Post.class);
+                                post.setpostID(postSnapShot.getRef().getKey());
+                                myPostsList.add(post);
+                                postID = postSnapShot.getRef().getKey();
+                                postIDList.add(postID);
+
+
+                            }
+
+                            myBlogsAdapter =new PostAdapter(myPostsList, getActivity(), postIDList);
+                            downloadRecyclerView.setAdapter(myBlogsAdapter);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+                else {
+                    Toast.makeText(getContext(), "You are not connected to Internet", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+
+
 
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,6 +319,10 @@ public class ProfileFragment extends Fragment {
 
         //    loadTextFile("hello");
 
+
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        downloadRecyclerView.setLayoutManager(layoutManager);
+        setHasOptionsMenu(true);
         return ProfileView;
     }
 
@@ -218,24 +363,27 @@ public class ProfileFragment extends Fragment {
                 .decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
-    public void loadTextFile(String fileName) {
+    public String loadTextFile(String fileName) {
         fileName = fileName + ".txt";
         FileInputStream fis = null;
 
+        String allText = "";
         try {
             fis = getContext().openFileInput(fileName);
             InputStreamReader isr = new InputStreamReader(fis);
             BufferedReader br = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();
             String text;
-            String titles = "";
+
 
             while ((text = br.readLine()) != null) {
-                titles += text + " ";
+                allText += text;
             }
 
-            Toast.makeText(getContext(), titles, Toast.LENGTH_LONG).show();
 
+            //Toast.makeText(getContext(), allText, Toast.LENGTH_LONG).show();
+
+            return allText;
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -250,6 +398,14 @@ public class ProfileFragment extends Fragment {
                 }
             }
         }
+        return allText;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
 }

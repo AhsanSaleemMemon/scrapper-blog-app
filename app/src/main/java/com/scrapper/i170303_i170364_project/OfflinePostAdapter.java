@@ -14,24 +14,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class OfflinePostAdapter extends RecyclerView.Adapter<OfflinePostAdapter.ViewHolder> {
 
 
-    private List<Post> list;
-    private List<String> postIDList;
+    private List<OfflinePost> list;
+    private List<String> auth_postIDList;
+
+
     Context c;
 
-    public PostAdapter(List<Post> list, Context c, List<String> postIDList) {
+    public OfflinePostAdapter(List<OfflinePost> list, Context c, ArrayList<String> auth_postIDList) {
         this.list = list;
         this.c = c;
-        this.postIDList = postIDList;
+        this.auth_postIDList =auth_postIDList;
+
     }
 
     public static Bitmap decodeBase64(String input) {
@@ -42,21 +47,34 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public PostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public OfflinePostAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(c).inflate(R.layout.foryouarticles_layout, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.postUploadTime.setText(list.get(position).getTimeStamp());
+    public void onBindViewHolder(@NonNull OfflinePostAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.postUploadTime.setText(list.get(position).getUploadTime());
+
+        String path_imageName = list.get(position).getPostImageAdress();
+        String[] path_imageName_split = path_imageName.split(",");
 
 
-        Picasso.get()
-                .load(list.get(position).getImageLink())
-                .fit()
-                .into(holder.postImage);
+        try {
+            File f=new File(path_imageName_split[0], path_imageName_split[1]+".jpg");
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+
+            holder.postImage.setImageBitmap(b);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+//        Picasso.get()
+//                .load(list.get(position).getImageLink())
+//                .fit()
+//                .into(holder.postImage);
 
         String updatedPostTitle = list.get(position).getTitle();
         if(updatedPostTitle.length() > 25) {
@@ -69,8 +87,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         int postWordCount = countWordsUsingSplit(list.get(position).getContent());
 
         if(postWordCount > 200) {
-           int mins = postWordCount/200;
-           holder.postReadTime.setText(Integer.toString(mins) + " min read" );
+            int mins = postWordCount/200;
+            holder.postReadTime.setText(Integer.toString(mins) + " min read" );
 
         }
         else {
@@ -82,18 +100,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
 
-            final Post post=list.get(position);
+            final OfflinePost post=list.get(position);
 
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(c,BlogPage.class);
-                intent.putExtra("postID",post.getpostID());
-                //intent.putExtra("postID",postIDList.get(position));
-                intent.putExtra("postimage",post.getImageLink());
+                Intent intent=new Intent(c,OfflineBlogPage.class);
+                //intent.putExtra("postID",post.getpostID());
+                intent.putExtra("authorimage",post.getPostAuthorImageAdress());
+                intent.putExtra("postimage",post.getPostImageAdress());
                 intent.putExtra("title",post.getTitle());
-                intent.putExtra("uploadtime",post.getTimeStamp());
-                intent.putExtra("authorname", post.getAuthor());
+                intent.putExtra("uploadtime",post.getUploadTime());
+                intent.putExtra("authorname", post.getAuthorName());
                 intent.putExtra("content", post.getContent());
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 c.startActivity(intent);
@@ -128,6 +146,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         String[] words = input.split("\\s+");
         return words.length;
     }
+
 
 
 

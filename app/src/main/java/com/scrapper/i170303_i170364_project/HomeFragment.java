@@ -91,7 +91,7 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot userSnapShot : snapshot.getChildren()) {
                     for (DataSnapshot postSnapShot: userSnapShot.getChildren()) {
                         Post post = postSnapShot.getValue(Post.class);
-
+                        post.setpostID(postSnapShot.getRef().getKey());
                         forYouList.add(post);
                         postID = postSnapShot.getRef().getKey();
                         postIDList.add(postID);
@@ -135,7 +135,7 @@ public class HomeFragment extends Fragment {
         });
 
 
-        forYouRecyclerView.setAdapter(postAdapter);
+      //  forYouRecyclerView.setAdapter(postAdapter);
         return HomeView;
 
     }

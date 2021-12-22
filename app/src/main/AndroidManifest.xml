@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +16,8 @@
         <activity android:name=".LoginActivity"></activity>
         <activity android:name=".CreateBlogActivity"></activity>
         <activity android:name=".BlogPage"></activity>
+        <activity android:name=".OfflineBlogPage"></activity>
+        <activity android:name=".EditBlog"></activity>
         <activity android:name=".WelcomeScreenActivity"
             android:noHistory="true"
             android:launchMode="singleInstance">
